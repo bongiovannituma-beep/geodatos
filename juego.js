@@ -1,4 +1,4 @@
-// Geoplay — motor del juego. Sin librerías: mapa dibujado a mano sobre <canvas>.
+// Geodatos — motor del juego. Sin librerías: mapa dibujado a mano sobre <canvas>.
 (() => {
 'use strict';
 const $ = s => document.querySelector(s);
@@ -314,7 +314,7 @@ function terminar() {
   $('#fin-puntos').innerHTML = puntitos(J.res, J.res.length);
   $('#fin-lista').innerHTML = J.res.map(r => `<div class="fila ${clase(r.base)}"><span class="pt"></span><span>${r.r}${r.d ? ` <small>· ${fmt(r.d)} km</small>` : ''}</span><b>${fmt(r.pts)}${r.mult > 1 ? ` <small>×${r.mult}</small>` : ''}</b></div>`).join('');
   $('#fin-aviso').textContent = J.modo === 'diaria' ? `🔥 Racha: ${est.racha} ${est.racha === 1 ? 'día' : 'días'}. Mañana hay ronda nueva.` : '';
-  const texto = `Geoplay ${J.modo === 'diaria' ? fechaCorta() : '(práctica)'}\n${J.res.map(r => emoji(r.base)).join('')} ${fmt(total)}/${fmt(max)}`;
+  const texto = `Geodatos ${J.modo === 'diaria' ? fechaCorta() : '(práctica)'}\n${J.res.map(r => emoji(r.base)).join('')} ${fmt(total)}/${fmt(max)}`;
   $('#compartir').textContent = '📤 Compartir resultado'; $('#compartir').onclick = () => compartirTexto(texto, $('#compartir'));
   botonGrupoFin(texto);
 }
@@ -350,7 +350,7 @@ function terminarTurnos() {
   $('#fin-lista').innerHTML = orden.map((o, i) => `<div class="puesto"><span class="n">${PUESTOS[i]}</span><span>${esc(o.n)}<br><span class="puntitos">${puntitos(o.res, o.res.length)}</span></span><b>${fmt(o.total)}</b></div>`).join('');
   $('#fin-aviso').textContent = 'Cada uno jugó las mismas 5 preguntas.';
   $('#compartir-grupo').hidden = true;
-  const texto = `Geoplay por turnos\n${orden.map((o, i) => `${PUESTOS[i]} ${o.n}: ${fmt(o.total)}`).join('\n')}`;
+  const texto = `Geodatos por turnos\n${orden.map((o, i) => `${PUESTOS[i]} ${o.n}: ${fmt(o.total)}`).join('\n')}`;
   $('#compartir').textContent = '📤 Compartir resultado'; $('#compartir').onclick = () => compartirTexto(texto, $('#compartir'));
 }
 async function compartirTexto(texto, boton) {
@@ -422,7 +422,7 @@ function verGrupo(cod) {
     <button id="g-borrar" class="btn sec">Salir de este grupo</button>
     <button id="g-volver" class="btn sec">← Mis grupos</button>`;
   document.querySelectorAll('.pestanas button').forEach(b => b.onclick = () => { pestana = b.dataset.p; verGrupo(cod); });
-  $('#g-invitar').onclick = () => { if (!pedirNombre()) return; compartirTexto(`Sumate a «${gr.nombre}» en Geoplay 🌎🗺️\nMis puntos y el grupo: ${linkGrupo(cod)}`, $('#g-invitar')); };
+  $('#g-invitar').onclick = () => { if (!pedirNombre()) return; compartirTexto(`Sumate a «${gr.nombre}» en Geodatos 🌎🗺️\nMis puntos y el grupo: ${linkGrupo(cod)}`, $('#g-invitar')); };
   $('#g-borrar').onclick = () => { if (confirm('¿Salir del grupo «' + gr.nombre + '»? Se borra de este celular.')) { delete est.grupos[cod]; guardar(); gruposPantalla(); } };
   $('#g-volver').onclick = gruposPantalla;
 }
@@ -431,7 +431,7 @@ function recibirLink() { // abre un link de grupo que mandó alguien por WhatsAp
   const nombre = limpiarNombre(par.get('gn')) || 'un grupo', quien = limpiarNombre(par.get('u'));
   history.replaceState(null, '', location.pathname);
   const ya = est.grupos[(par.get('g') || '').toUpperCase().replace(/[^A-Z0-9]/g, '')];
-  if (!ya && !confirm(`${quien ? quien + ' te invitó' : 'Te invitaron'} al grupo «${nombre}» de Geoplay. ¿Querés sumarte?`)) return;
+  if (!ya && !confirm(`${quien ? quien + ' te invitó' : 'Te invitaron'} al grupo «${nombre}» de Geodatos. ¿Querés sumarte?`)) return;
   if (!pedirNombre()) return;
   const c = importarLink(par); if (c) verGrupo(c);
 }
