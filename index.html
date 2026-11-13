@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Geoplay</title>
+<meta name="description" content="Trivia diaria: tocá en el mapa dónde pasó. Argentina y el mundo.">
+<meta name="theme-color" content="#2e86de">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icono.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icono-192.png">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<div id="app">
+
+  <section id="inicio" class="pantalla">
+    <header class="barra">
+      <button class="icono btn-menu" aria-label="Menú">☰</button>
+      <span class="logo">Geo<span>play</span></span>
+      <span class="fecha" id="fecha-inicio"></span>
+    </header>
+    <div class="scroll"><div class="contenedor">
+      <div id="bloque-hoy" class="hero"></div>
+      <div class="stats">
+        <div><b id="st-racha">0</b><small>🔥 racha</small></div>
+        <div><b id="st-mejor">0</b><small>🏆 mejor ronda</small></div>
+        <div><b id="st-jugadas">0</b><small>🎯 rondas</small></div>
+      </div>
+      <div class="dos-botones">
+        <button id="ir-turnos" class="btn sec">🎲 Por turnos</button>
+        <button id="ir-grupos" class="btn sec">👥 Grupos</button>
+      </div>
+      <h3>🧉 Argentina</h3>
+      <div id="temas-ar" class="temas"></div>
+      <h3>🌎 Mundo</h3>
+      <div id="temas-mu" class="temas"></div>
+    </div></div>
+  </section>
+
+  <section id="juego" class="pantalla" hidden>
+    <header class="barra">
+      <button id="salir" class="icono" aria-label="Salir de la partida">✕</button>
+      <span class="logo">Geo<span>play</span></span>
+      <span class="fecha" id="fecha-juego"></span>
+    </header>
+    <div class="cuerpo">
+      <div class="marcador">
+        <div class="puntos-caja"><small>PUNTOS</small><b id="puntos">0</b></div>
+        <div class="pregunta-card">
+          <div class="cinta"><span id="progreso"></span><span id="mult" class="mult"></span></div>
+          <p id="pregunta"></p>
+        </div>
+      </div>
+      <div class="mapa-wrap">
+        <canvas id="mapa" aria-label="Mapa para tocar la respuesta"></canvas>
+        <div class="zoom">
+          <button id="mas" aria-label="Acercar">+</button>
+          <button id="menos" aria-label="Alejar">−</button>
+          <button id="centrar" aria-label="Ver todo el mapa">⌖</button>
+          <button id="sat" aria-label="Cambiar entre mapa y satélite" title="Mapa / satélite">🛰️</button>
+        </div>
+        <div id="pista">Tocá el mapa para marcar tu respuesta</div>
+      </div>
+      <div id="panel"></div>
+    </div>
+  </section>
+
+  <section id="stats" class="pantalla" hidden>
+    <header class="barra">
+      <button class="icono" id="stats-volver" aria-label="Volver">←</button>
+      <span class="logo">Estadísticas</span><span></span>
+    </header>
+    <div class="scroll"><div class="contenedor" id="stats-cuerpo"></div></div>
+  </section>
+
+  <section id="grupos" class="pantalla" hidden>
+    <header class="barra">
+      <button class="icono" id="grupos-volver" aria-label="Volver">←</button>
+      <span class="logo">Grupos</span><span></span>
+    </header>
+    <div class="scroll"><div class="contenedor" id="grupos-cuerpo"></div></div>
+  </section>
+
+  <section id="fin" class="pantalla" hidden>
+    <header class="barra">
+      <button class="icono" id="fin-cerrar" aria-label="Volver al inicio">←</button>
+      <span class="logo">Geo<span>play</span></span><span class="fecha" id="fecha-fin"></span>
+    </header>
+    <div class="scroll"><div class="contenedor fin">
+      <h1 id="fin-titulo">¡Terminaste!</h1>
+      <p id="fin-sub" class="chico"></p>
+      <div id="fin-total" class="gran"></div>
+      <div id="fin-puntos" class="puntitos"></div>
+      <div id="fin-lista"></div>
+      <button id="compartir" class="btn">📤 Compartir resultado</button>
+      <button id="compartir-grupo" class="btn sec" hidden>👥 Compartir con un grupo</button>
+      <button id="volver" class="btn sec">Volver al inicio</button>
+      <p id="fin-aviso" class="chico"></p>
+    </div></div>
+  </section>
+
+  <div id="menu-fondo" class="fondo-menu" hidden></div>
+  <nav id="menu" class="menu" aria-label="Menú" hidden>
+    <div class="menu-cab"><span class="logo">Geo<span>play</span></span><button class="icono" id="cerrar-menu" aria-label="Cerrar menú">✕</button></div>
+    <button data-ir="inicio">🏠 Inicio</button>
+    <button data-ir="hoy">▶ Ronda de hoy</button>
+    <button data-ir="turnos">🎲 Jugar por turnos</button>
+    <button data-ir="grupos">👥 Grupos y ranking</button>
+    <button data-ir="stats">📊 Estadísticas</button>
+    <button data-ir="ayuda">❓ Cómo se juega y se puntúa</button>
+    <button data-ir="sonido" id="menu-sonido">🔊 Sonido: sí</button>
+  </nav>
+
+  <div id="turnos-modal" class="modal" hidden>
+    <div class="modal-caja">
+      <h2>🎲 Jugar por turnos</h2>
+      <p class="chico">Un solo celular para todos. Misma ronda de 5 preguntas: cada uno marca su respuesta en su turno y gana quien más puntos junte.</p>
+      <div id="turnos-nombres"></div>
+      <button id="turnos-mas" class="btn sec">+ Agregar jugador</button>
+      <button id="turnos-empezar" class="btn">▶ Empezar</button>
+      <button id="turnos-cancelar" class="btn sec">Cancelar</button>
+    </div>
+  </div>
+
+  <div id="ayuda" class="modal" hidden>
+    <div class="modal-caja">
+      <h2>¿Cómo se juega?</h2>
+      <ol>
+        <li>Leé la pregunta y tocá en el mapa el lugar de la respuesta. Movés con el dedo, hacés zoom pellizcando (o con la ruedita en la compu).</li>
+        <li>Confirmá. Cuanto más cerca, más puntos: cada pregunta vale hasta 100.</li>
+        <li>Las preguntas más avanzadas valen más: <b>×1, ×1, ×2, ×2 y ×4</b>. Una ronda perfecta suma <b>1.000</b>.</li>
+        <li>Si la respuesta es una provincia o un país, tocar adentro da el puntaje completo.</li>
+        <li>Con 🛰️ cambiás entre el mapa de colores y fotos satelitales de la NASA (necesita internet).</li>
+        <li>Con «Por turnos» juegan varios en el mismo celular. Con «Grupos» comparás tu puntaje con la familia: cada uno manda su link por WhatsApp.</li>
+        <li>Cada día hay una ronda nueva de 5 preguntas, igual para todos. ¡Compará tu puntaje con la familia!</li>
+      </ol>
+      <p><span class="pt v">●</span> 90–100 ¡Excelente! &nbsp; <span class="pt a">●</span> 50–89 Cerca &nbsp; <span class="pt r">●</span> 1–49 Lejos &nbsp; <span class="pt n">●</span> 0 Muy lejos</p>
+      <button id="cerrar-ayuda" class="btn">¡Entendido!</button>
+    </div>
+  </div>
+</div>
+<script src="mapas.js"></script>
+<script src="preguntas.js"></script>
+<script src="juego.js"></script>
+</body>
+</html>
